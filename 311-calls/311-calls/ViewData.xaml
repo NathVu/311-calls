@@ -1,0 +1,69 @@
+﻿<Page x:Class="Group7.ViewData"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Group7"
+      mc:Ignorable="d" 
+      d:DesignHeight="1000" d:DesignWidth="1500"
+      Title="ViewData">
+    <Grid Margin="0,0,0,0" Background="Snow" Name="OverallData">
+        <Image HorizontalAlignment="Left" Height="100" Margin="0,0,0,0" VerticalAlignment="Top" Width="100" Source="Logo.jpg"/>
+        <Button Name="Previous" Content="Previous" ClickMode="Press" Click="Previous_click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Height="50" Width="100" Visibility="Visible" Panel.ZIndex="100" />
+        <Button Name="Next" Content="Next" ClickMode="Press" Click="Next_click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="200,0,0,0" Height="50" Width="100" Visibility="Visible" Panel.ZIndex="100"/>
+        <TextBox Text="Showing Rows:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,50,0,0" BorderThickness="0" Background="Snow" />
+        <TextBox Name="Rows_min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="183,50,0,0" BorderThickness="0" Background="Snow" />
+        <TextBox Text="Through" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,50,0,0" BorderThickness="0" Background="Snow"/>
+        <TextBox Name="Rows_max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,68,0,0" BorderThickness="0" Background="Snow"/>
+        <TextBox Text="Of" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="170,68,0,0" BorderThickness="0" Background="Snow" />
+        <TextBox Name ="Total" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="188,68,0,0" BorderThickness="0" Background="Snow"/>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ListView Margin="0,100,0,0" Name="DBDataBimnding">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Unique Key" DisplayMemberBinding="{Binding Unique_key}" />
+                            <GridViewColumn Header="Created Date" DisplayMemberBinding="{Binding Created_date}" />
+                            <GridViewColumn Header="Closed Date" DisplayMemberBinding="{Binding Closed_date}"/>
+                            <GridViewColumn Header="Agency Name" DisplayMemberBinding="{Binding Agency_name}" />
+                            <GridViewColumn Header="Complaint Type" DisplayMemberBinding="{Binding Complaint_type}" />
+                            <GridViewColumn Header="Descriptor" DisplayMemberBinding="{Binding Descriptor}" />
+                            <GridViewColumn Header="Location Type" DisplayMemberBinding="{Binding Location_type}" />
+                            <GridViewColumn Header="Incident Zip" DisplayMemberBinding="{Binding Incident_zip}" />
+                            <GridViewColumn Header="Incident Address" DisplayMemberBinding="{Binding Incident_address}" />
+                            <GridViewColumn Header="Street Name" DisplayMemberBinding="{Binding Street_name}" />
+                            <GridViewColumn Header="Cross St 1" DisplayMemberBinding="{Binding Cross_street_1}" />
+                            <GridViewColumn Header="Cross St 2" DisplayMemberBinding="{Binding Cross_street_2}" />
+                            <GridViewColumn Header="Intersection st 1" DisplayMemberBinding="{Binding Intersection_street_1}" />
+                            <GridViewColumn Header="Intersection st 2" DisplayMemberBinding="{Binding Intersection_street_2}" />
+                            <GridViewColumn Header="Address Type" DisplayMemberBinding="{Binding Address_type}" />
+                            <GridViewColumn Header="City" DisplayMemberBinding="{Binding City}" />
+                            <GridViewColumn Header="Landmark" DisplayMemberBinding="{Binding Landmark}" />
+                            <GridViewColumn Header="Facility Type" DisplayMemberBinding="{Binding Facility_type}" />
+                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
+                            <GridViewColumn Header="Due Date" DisplayMemberBinding="{Binding Due_date}" />
+                            <GridViewColumn Header="Resolution Description" DisplayMemberBinding="{Binding Resolution_description}" />
+                            <GridViewColumn Header="Resolution Updated Date" DisplayMemberBinding="{Binding Resolution_action_updated_date}" />
+                            <GridViewColumn Header="Community Board" DisplayMemberBinding="{Binding Community_board}" />
+                            <GridViewColumn Header="Borough" DisplayMemberBinding="{Binding Borough}" />
+                            <GridViewColumn Header="Park Name" DisplayMemberBinding="{Binding Park_facility_name}" />
+                            <GridViewColumn Header="Park Borough" DisplayMemberBinding="{Binding Park_borough}" />
+                            <GridViewColumn Header="Vehicle Type" DisplayMemberBinding="{Binding Vehicle_type}" />
+                            <GridViewColumn Header="Taxi Company Borough" DisplayMemberBinding="{Binding Taxi_company_borough}" />
+                            <GridViewColumn Header="Taxi Pick Up Location" DisplayMemberBinding="{Binding Taxi_pick_up_location}" />
+                            <GridViewColumn Header="Bridge/Highway Name" DisplayMemberBinding="{Binding Bridge_highway_name}" />
+                            <GridViewColumn Header="Bridge/Highway Direction" DisplayMemberBinding="{Binding Bridge_highway_direction}" />
+                            <GridViewColumn Header="Road Ramp" DisplayMemberBinding="{Binding Road_ramp}" />
+                            <GridViewColumn Header="Bridge/Highway Segment" DisplayMemberBinding="{Binding Bridge_highway_segment}" />
+                            <GridViewColumn Header="Latitude" DisplayMemberBinding="{Binding Latitude}" />
+                            <GridViewColumn Header="Longitude" DisplayMemberBinding="{Binding Longitude}" />
+                            <GridViewColumn Header="Location city" DisplayMemberBinding="{Binding Location_city}" />
+                            <GridViewColumn Header="Location Zip" DisplayMemberBinding="{Binding Location_zip}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
+</Page>
