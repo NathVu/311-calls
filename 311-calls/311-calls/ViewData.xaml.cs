@@ -24,16 +24,26 @@ namespace Group7
     /// </summary>
     public partial class ViewData : Page
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public ViewData()
         {
             InitializeComponent();
             RowNumbers rows = new RowNumbers();
+            try
+            {
+                rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
+            } catch(Exception e)
+            {
+                log.Info("Exception occured of type: " + e.GetType() + " in ViewData.xaml.cs when accessing application resources");
+            }
             List<Json311> data = this.getData(rows);
             OverallData.DataContext = rows;
             DBDataBinding.ItemsSource = data;
             Total.Text = rows.total.ToString();
             Rows_min.Text = rows.Curr_min.ToString();
             Rows_max.Text = rows.Curr_max.ToString();
+            Application.Current.Resources["RowNumbers"] = rows;
         }
 
 
@@ -65,18 +75,21 @@ namespace Group7
         private void Previous_click(object sender, RoutedEventArgs e)
         {
             RowNumbers rows = ((Button)sender).DataContext as RowNumbers;
-            List<Json311> data = new List<Json311>();
-            bool update = rows.UpdateValuesDown();
-            if (update == true)
+            try
             {
-                data = getData(rows);
+                rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
             }
-            Rows_min.Text = rows.Curr_min.ToString();
-            Rows_max.Text = rows.Curr_max.ToString();
-            DBDataBinding.DataContext = rows;
-            //System.Windows.Application.LoadComponent(ViewData.xaml);
-            //DBDataBinding.GetBindingExpression(ListView.DataContextProperty).UpdateSource();
-
+            catch (Exception error)
+            {
+                log.Info("Exception occured of type: " + error.GetType() + " in ViewData.xaml.cs when accessing application resources");
+            }
+            bool update = rows.UpdateValuesDown();
+            if(update == true)
+            {
+                ViewData newView = new ViewData();
+                System.GC.Collect();
+                this.NavigationService.Navigate(newView);
+            }
         }
 
         /// <summary>
@@ -87,18 +100,21 @@ namespace Group7
         private void Next_click(object sender, RoutedEventArgs e)
         {
             RowNumbers rows = ((Button)sender).DataContext as RowNumbers;
-            bool update = rows.UpdateValuesUp();
-            List<Json311> data = new List<Json311>();
-            if (update == true)
+            try
             {
-                data = getData(rows);
+                rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
             }
-            Rows_min.Text = rows.Curr_min.ToString();
-            Rows_max.Text = rows.Curr_max.ToString();
-            OverallData.DataContext = rows;
-            DBDataBinding.DataContext = data;
-            DBDataBinding.GetBindingExpression(ListView.DataContextProperty).UpdateSource();
-
+            catch (Exception error)
+            {
+                log.Info("Exception occured of type: " + error.GetType() + " in ViewData.xaml.cs when accessing application resources");
+            }
+            bool update = rows.UpdateValuesUp();
+            if(update == true)
+            {
+                ViewData newView = new ViewData();
+                GC.Collect();
+                this.NavigationService.Navigate(newView);
+            }
         }
 
 

@@ -17,10 +17,25 @@ namespace RowManager
         public int Curr_max = 500;
         public int rowsRemaining = 500;
 
+        public RowNumbers() { }
+
         /// <summary>
-        /// Updates the values if the next button is clicked
+        /// Constructor for initialization with values (most of the time this
+        /// will be used))
         /// </summary>
-        /// <returns>a bool whether or not to update the values</returns>
+        /// <param name="start">The starting value</param>
+        /// <param name="max">The Current Max value</param>
+        public RowNumbers(int start, int max)
+        {
+            this.Curr_min = start;
+            this.Curr_max = max;
+            this.rowsRemaining = max;
+        }
+
+       /// <summary>
+       /// Updates the values if the next button is clicked
+       /// </summary>
+       /// <returns>a bool whether or not to update the values</returns>
         public bool UpdateValuesUp()
         {
             if ((this.Curr_max + 500) > this.total && (this.Curr_min + 500) > this.total)
@@ -73,7 +88,7 @@ namespace RowManager
         /// <returns>A bool whether or not to update the values</returns>
         public bool UpdateValuesDown()
         {
-            if ((this.Curr_min - 500) < 500)
+            if ((this.Curr_min - 500) < 0)
             {
                 MessageBoxResult result = MessageBox.Show("Sorry, you cannot go any further back, would you like to go the end of the dataset?", "Our of Bounds", MessageBoxButton.OKCancel);
                 return CarryOutDownResult(result);
