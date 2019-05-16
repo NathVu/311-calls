@@ -7,6 +7,7 @@ using PgsqlDriver;
 using Npgsql;
 using NUnit.Framework;
 using System.Globalization;
+using System.Windows;
 
 
 namespace ConsoleApp1
@@ -25,17 +26,14 @@ namespace ConsoleApp1
         /// it handles the connection, API call and update to the gcloud database
         /// </summary>
         /// <param name="arguments">the credentials</param>
-        public void Execute(string[] arguments)
+        public void Execute()
         {
-            String user = arguments[0];
-            String pass = arguments[1];
             SqlConnect dBConnect = new SqlConnect();
-            String connString = dBConnect.Connect(user, pass, false);
+            String connString = (string)Application.Current.Resources["ConnString"];
             dBConnect.CheckDate(connString, out DateTime date);
             DataFormat test = new DataFormat();
-            Dictionary<string, object>[] rarr = test.getData(date);
-            List<Json311> forDB = new List<Json311>();
-            forDB = test.parseData(rarr);
+            Dictionary<string, object>[] rarr = test.GetData(date);
+            List<Json311> forDB = test.ParseData(rarr);
             dBConnect.Import(forDB, connString);
         }
 
@@ -47,14 +45,12 @@ namespace ConsoleApp1
         /// </summary>
         /// <param name="arguments">the credentials to access the database</param>
         /// <returns>returns true if the database should be updated and false if not</returns>
-        public bool CheckDateForUpdate(string[] arguments)
+        public bool CheckDateForUpdate()
         {
-            String user = arguments[0];
-            String pass = arguments[1];
             DateTime test = DateTime.Now;
             DateTime now = DateTime.Now;
             SqlConnect dBConnect = new SqlConnect();
-            String connString = dBConnect.Connect(user, pass, false);
+            String connString = (string)Application.Current.Resources["ConnString"];
             using (var conn = new NpgsqlConnection(connString))
             {
                 conn.Open();
@@ -94,29 +90,18 @@ namespace ConsoleApp1
         /// <param name="dataset"> recieves out dataset, formatted in getData into an array of Dictionary objects</param>
         /// <returns>The data parsed into our user created class
         /// </returns>
-        public List<Json311> parseData(Dictionary<string, object>[] dataset)
+        public List<Json311> ParseData(Dictionary<string, object>[] dataset)
         {
             List<Json311> dataList = new List<Json311>();
             DateTime date = DateTime.Today.Date.AddDays(-1);
-            int countY = 0, countT = 0;
             for (int i = 0; i < dataset.Length; i++)
             {
                 Json311 dItem = new Json311(dataset[i]);
-               if(dItem.Created_date < date)
+                if (dItem.Created_date < date)
                 {
                     dataList.Add(dItem);
-                    countY++;
                 }
-                else
-                {
-                    countT++;
-                }
-
             }
-            /// <remarks>
-            /// Should think about adding
-            /// </remarks>
-            //Console.WriteLine("Today: " + countT + "     Yesterday: " + countY);
             return dataList;
         }
 
@@ -125,7 +110,7 @@ namespace ConsoleApp1
         /// And converts it to an array which we return
         /// </summary>
         /// <returns>A Dictionary Array which we can read through</returns>
-        public Dictionary<string, object>[] getData(DateTime date)
+        public Dictionary<string, object>[] GetData(DateTime date)
         {
             ManageDB test = new ManageDB();
             IEnumerable<Dictionary<string, object>> results = test.LoadDB(date);
@@ -136,7 +121,6 @@ namespace ConsoleApp1
             /// to read the data that our query returned
             /// </remarks>
             Dictionary<string, object>[] results_arr = results.ToArray();
-            Dictionary<string, object> val = results_arr[0];
             return results_arr;
         }
     }
@@ -161,12 +145,6 @@ namespace ConsoleApp1
         /// <returns>Returns the dataset of the query to main</returns>
         public IEnumerable<Dictionary<string, object>> LoadDB(DateTime date)
         {
-
-            /// <remarks>
-            /// This requires the SODA library
-            /// It can be installed from NuGet in Visual studio using
-            /// Install-Package CSM.SodaDotNet
-            /// </remarks>>
             SODA.SodaClient client = new SodaClient("https://data.cityofnewyork.us", "PVGjhHLj8Svy7Ryz0uJgW9IBh");
 
             /// <remarks>
@@ -177,26 +155,8 @@ namespace ConsoleApp1
             /// well enough, however so we are sticking with the Generic Collection specified
             /// </remarks>>
             SODA.Resource<Dictionary<string, object>> dataset = client.GetResource<Dictionary<string, object>>("fhrw-4uyv");
-
-            /// <summary>
-            /// instantiate our object and get our query from GetQueryDate()
-            /// </summary>
-            ManageDB test = new ManageDB();
-            SODA.SoqlQuery soql = test.GetQueryDate(date);
-
-            /// <summary>
-            /// Query sends our query to our pre-defined location and returns an IEnumerable which we assign to results
-            /// results now contains the results of our query
-            /// </summary>
+            SoqlQuery soql = this.GetQueryDate(date);
             IEnumerable<Dictionary<string, object>> results = dataset.Query<Dictionary<string, object>>(soql);
-
-            /// <summary>
-            /// Testing to make sure that our query returned results
-            /// Will be changed to throw an error instead of printing a value
-            /// </summary>
-            int SizeOfList;
-            test.TestIEnum(ref results, out SizeOfList);
-            //Console.WriteLine(SizeOfList);
             return results;
         }
 
@@ -209,6 +169,7 @@ namespace ConsoleApp1
         /// <returns>our Query in their defined type - SODA.SoqlQuery </returns>
         public SODA.SoqlQuery GetQueryDate(DateTime date)
         {
+
             /// <remarks>
             /// Get Date and Time of system now so we do not have to keep changing the code
             /// </remarks>
@@ -275,16 +236,6 @@ namespace ConsoleApp1
             }
 
             return soql;
-        }
-
-        /// <summary>
-        /// Internal Test to make sure the query is returning data and not an empty set
-        /// </summary>
-        /// <param name="testDB"> The database we want to test</param>
-        /// <param name="SizeOfList"> An out parameter - returns the number of data items in the database</param>
-        public void TestIEnum(ref IEnumerable<Dictionary<string, object>> testDB, out int SizeOfList)
-        {
-            SizeOfList = testDB.Count();
         }
     }
 

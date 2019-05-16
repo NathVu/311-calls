@@ -32,8 +32,9 @@ namespace Group7
             RowNumbers rows = new RowNumbers();
             try
             {
-                rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
-            } catch(Exception e)
+                rows = (RowNumbers)Application.Current.Resources["RowNumbers"];
+            }
+            catch (Exception e)
             {
                 log.Info("Exception occured of type: " + e.GetType() + " in ViewData.xaml.cs when accessing application resources");
             }
@@ -44,7 +45,9 @@ namespace Group7
             Rows_min.Text = rows.Curr_min.ToString();
             Rows_max.Text = rows.Curr_max.ToString();
             Application.Current.Resources["RowNumbers"] = rows;
+
         }
+        
 
 
         /// <summary>
@@ -55,12 +58,9 @@ namespace Group7
         /// <returns>Returns the data to populate the table</returns>
         private List<Json311> getData(RowNumbers rows)
         {
-            Credentials creds = new Credentials();
-            String user = creds.args[0];
-            String pass = creds.args[1];
+            String connString = (string)Application.Current.Resources["connString"];
             SqlConnect getConnection = new SqlConnect();
-            String connString = getConnection.Connect(user, pass, false);
-            List<Json311> displayData = new List<Json311>();
+            List<Json311> displayData;
             Json311 retrieve = new Json311();
             rows.total = getConnection.GetRows(connString);
             displayData = retrieve.FillList(connString, rows.Curr_min, rows.rowsRemaining);

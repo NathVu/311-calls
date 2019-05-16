@@ -10,34 +10,22 @@ namespace PgsqlDriver
 {
 
     /// <summary>
-    ///  Class to connect our program to our postgres DB and load our data into it
+    ///  Class to connect our program to postgres DB and load our data into it
     /// </summary>
     class SqlConnect
     {
-        /// <remarks> 
-        /// Documentation for how to use is https://www.npgsql.org/doc/copy.html
-        /// Copy command - list number of columns and then write them all 
-        /// Will require 1 very large write function to accomodate all of our data types and values and then will go through the list and update it with all the new values 
-        /// One huge iterator through the loop 
-        /// </remarks>
-        
         /// <summary>
         /// Establishes a connection between the program and our database (which will hopefully be hosted on Google Cloud Compute - completed)
         /// Also check the username/password pair and prompts the user to re-enter if they are incorrect  
+        /// This Connect version is to connect to the GCP database 
         /// </summary>  
-        public String Connect(String user = "", String pass = "", bool newCredentials = true)
+        public String ConnectGCP(String user = "", String pass = "", bool newCredentials = true)
         {
             if(newCredentials == true)
             {
                 user = Authenticate(out pass);
             }
             pass.Replace(" ", ""); //remove accidental whitespace
-            //Console.Write("Testing Connection: ");
-            /// <remarks>
-            /// we bind the proxy to port 5433 using the command 
-            /// cloud_sql_proxy -instances=<INSTANCE_CONNECTION_NAME>=tcp:5432 \
-            /// -credential_file =< PATH_TO_KEY_FILE > &
-            ///  </remarks>
             String connString = "Host=127.0.0.1;Port=5433;Username=" + user + ";Password=" + pass + ";Database=postgres";
 
             try
@@ -51,13 +39,50 @@ namespace PgsqlDriver
                 }
             }    catch(Npgsql.PostgresException a) when (newCredentials == true)
                  {
-                    //Console.WriteLine("Your username and password do not match, try again " + a.GetType());
-                    this.Connect();
+                    this.ConnectGCP();
                 }
 
             return "failed";
             
         }
+
+        /// <summary>
+        /// To connect to the database stored on localhost for quicker testing
+        /// and development
+        /// </summary>
+        /// <param name="user">The username for the connection string</param>
+        /// <param name="pass">The password for the connection string</param>
+        /// <param name="newCredentials">For testing purposes</param>
+        /// <returns></returns>
+        public String ConnectLocal(String user = "", String pass = "", bool newCredentials = true)
+        {
+            if (newCredentials == true)
+            {
+                user = Authenticate(out pass);
+            }
+            pass.Replace(" ", ""); //remove accidental whitespace
+            String connString = "Host=localhost;Port=5432;Username=" + user + ";Password=" + pass + ";Database=calls311";
+
+            try
+            {
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    conn.Open();
+                    this.CheckConnection(conn);
+                    conn.Close();
+                    return connString;
+                }
+            }
+            catch (Npgsql.PostgresException a) when (newCredentials == true)
+            {
+                //Console.WriteLine("Your username and password do not match, try again " + a.GetType());
+                this.ConnectLocal();
+            }
+
+            return "failed";
+
+        }
+
 
         /// <summary>
         /// make sure a connection has been established to the database
@@ -75,7 +100,7 @@ namespace PgsqlDriver
             else
             {
                // Console.WriteLine("Connection Dropped, Please re-enter credentials");
-                this.Connect();
+                this.ConnectGCP();
             }
         }
 

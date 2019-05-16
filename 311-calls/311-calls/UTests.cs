@@ -29,7 +29,7 @@ namespace UTests
             /// <remarks>
             /// Uses a test user who has only insert and select privelege in testtable
             /// </remarks>
-            String connString = DBTest.Connect("test", "test", false);
+            String connString = DBTest.ConnectGCP("test", "test", false);
             NpgsqlConnection conn = new NpgsqlConnection(connString);
             conn.Open();
             /// <remarks>
@@ -73,9 +73,9 @@ namespace UTests
         public void NullCredentials()
         {
             SqlConnect DBTest = new SqlConnect();
-            Assert.Throws<System.NullReferenceException>( () => { DBTest.Connect("test", null, false); });
-            Assert.Throws<System.NullReferenceException>(() => { DBTest.Connect(null, null, false); });
-            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.Connect(null, "test", false); });
+            Assert.Throws<System.NullReferenceException>( () => { DBTest.ConnectGCP("test", null, false); });
+            Assert.Throws<System.NullReferenceException>(() => { DBTest.ConnectGCP(null, null, false); });
+            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.ConnectGCP(null, "test", false); });
 
         }
 
@@ -86,10 +86,10 @@ namespace UTests
         public void FakeCredentials()
         {
             SqlConnect DBTest = new SqlConnect();
-            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.Connect("test", "tes", false); });
-            Assert.Throws<Npgsql.NpgsqlException>(() => { DBTest.Connect("test", "", false); });
-            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.Connect("tes", "tes", false); });
-            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.Connect("", "tes", false); });
+            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.ConnectGCP("test", "tes", false); });
+            Assert.Throws<Npgsql.NpgsqlException>(() => { DBTest.ConnectGCP("test", "", false); });
+            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.ConnectGCP("tes", "tes", false); });
+            Assert.Throws<Npgsql.PostgresException>(() => { DBTest.ConnectGCP("", "tes", false); });
 
         }
 
@@ -102,7 +102,7 @@ namespace UTests
         public void CheckPermissions()
         {
             SqlConnect DBTest = new SqlConnect();
-            String connString = DBTest.Connect("test", "test", false);
+            String connString = DBTest.ConnectGCP("test", "test", false);
             Assert.Throws<Npgsql.PostgresException>(() => { DBTest.CheckDate(connString, out DateTime date); });
         }
     }

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using JsonUserVariable;
 using PgsqlDriver;
 using RowManager;
+using ConsoleApp1;
 
 
 namespace Group7
@@ -27,8 +28,41 @@ namespace Group7
         public HomeView()
         {
             InitializeComponent();
+            WhichDatabase();
             RowNumbers rows = new RowNumbers(0,500);
             Application.Current.Resources["RowNumbers"] = rows;
+        }
+
+        /// <summary>
+        /// Checks to see which database the user wants to use, will be deprecated later on
+        /// and switched to just GCP, local is just here for testing
+        /// </summary>
+        public void WhichDatabase()
+        {
+            MessageBoxResult result = MessageBox.Show("Would you like to use the GCP database?" +
+                 " \n If not it will use the local database", "Database Prompt", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        SqlConnect connect = new SqlConnect();
+                        Credentials creds = new Credentials();
+                        String user = creds.GCPargs[0];
+                        String pass = creds.GCPargs[1];
+                        Application.Current.Resources["connString"] = connect.ConnectGCP(user, pass, false);
+                    }
+                    break;
+
+                case MessageBoxResult.No:
+                    {
+                        SqlConnect connect = new SqlConnect();
+                        Credentials creds = new Credentials();
+                        String user = creds.LocalArg[0];
+                        String pass = creds.LocalArg[1];
+                        Application.Current.Resources["connString"] = connect.ConnectLocal(user, pass, false);
+                    }
+                    break;
+            }
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
@@ -39,6 +73,8 @@ namespace Group7
 
         /// <summary>
         /// Updates the database when the "update" button is clicked
+        /// Checks to see if the user wants to use the GCP Database or the local
+        /// database, will be changed when program is completed to default to GCP
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -46,9 +82,7 @@ namespace Group7
         {
             Credentials creds = new Credentials();
             ConsoleApp1.Group7 drive = new ConsoleApp1.Group7();
-            drive.Execute(creds.args);
+            drive.Execute();
         }
-
-
     }
 }
