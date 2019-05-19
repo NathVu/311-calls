@@ -399,7 +399,8 @@ namespace PgsqlDriver
             using(var conn = new NpgsqlConnection(connString))
             {
                 conn.Open();
-                using(NpgsqlCommand totalRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls", conn))
+                using(NpgsqlCommand totalRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE Created_date IS NOT NULL AND" +
+                    " Closed_date IS NOT NULL AND Due_date IS NOT NULL AND Resolution_action_updated_date IS NOT NULL", conn))
                 using(NpgsqlDataReader reader = totalRows.ExecuteReader())
                 {
                     while (reader.Read())

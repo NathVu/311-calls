@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using JsonUserVariable;
 using PgsqlDriver;
 using RowManager;
-using ConsoleApp1;
 
 
 namespace Group7
@@ -39,6 +38,13 @@ namespace Group7
         /// </summary>
         public void WhichDatabase()
         {
+            SqlConnect connect = new SqlConnect();
+            Credentials creds = new Credentials();
+            String user = creds.GCPargs[0];
+            String pass = creds.GCPargs[1];
+            Application.Current.Resources["connString"] = connect.ConnectGCP(user, pass, false);
+
+            /*
             MessageBoxResult result = MessageBox.Show("Would you like to use the GCP database?" +
                  " \n If not it will use the local database", "Database Prompt", MessageBoxButton.YesNo);
             switch (result)
@@ -62,7 +68,8 @@ namespace Group7
                         Application.Current.Resources["connString"] = connect.ConnectLocal(user, pass, false);
                     }
                     break;
-            }
+            } 
+            */
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)

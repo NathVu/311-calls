@@ -29,7 +29,7 @@ namespace ConsoleApp1
         public void Execute()
         {
             SqlConnect dBConnect = new SqlConnect();
-            String connString = (string)Application.Current.Resources["ConnString"];
+            String connString = (string)Application.Current.Resources["connString"];
             dBConnect.CheckDate(connString, out DateTime date);
             DataFormat test = new DataFormat();
             Dictionary<string, object>[] rarr = test.GetData(date);
