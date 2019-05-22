@@ -19,6 +19,7 @@ using RowManager;
 
 namespace Group7
 {
+
     /// <summary>
     /// Interaction logic for ViewData.xaml
     /// </summary>
@@ -53,12 +54,11 @@ namespace Group7
         /// <returns>Returns the data to populate the table</returns>
         private List<Json311> GetData(RowNumbers rows)
         {
-            String connString = (string)Application.Current.Resources["connString"];
             SqlConnect getConnection = new SqlConnect();
             List<Json311> displayData;
             Json311 retrieve = new Json311();
-            rows.total = getConnection.GetRows(connString);
-            displayData = retrieve.FillList(connString, rows.Curr_min, rows.rowsRemaining);
+            rows.total = getConnection.GetRows();
+            displayData = retrieve.GetFullDataset(rows.Curr_min, rows.rowsRemaining);
             return displayData;
         }
 
@@ -69,8 +69,7 @@ namespace Group7
         /// <param name="e"></param>
         private void Previous_click(object sender, RoutedEventArgs e)
         {
-            RowNumbers rows = ((Button)sender).DataContext as RowNumbers;
-            rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
+            RowNumbers rows = Application.Current.Resources["RowNumbers"] as RowNumbers; ;
             bool update = rows.UpdateValuesDown();
             if(update == true)
             {
@@ -78,6 +77,7 @@ namespace Group7
                 GC.Collect();
                 this.NavigationService.Refresh();
             }
+            Application.Current.Resources["RowNumbers"] = rows;
         }
 
         /// <summary>
@@ -87,8 +87,7 @@ namespace Group7
         /// <param name="e"></param>
         private void Next_click(object sender, RoutedEventArgs e)
         {
-            RowNumbers rows = ((Button)sender).DataContext as RowNumbers;
-            rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
+            RowNumbers rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
             bool update = rows.UpdateValuesUp();
             if(update == true)
             {
@@ -96,8 +95,15 @@ namespace Group7
                 GC.Collect();
                 this.NavigationService.Refresh();
             }
+            Application.Current.Resources["RowNumbers"] = rows;
         }
 
+
+        private void Display_map(object sender, RoutedEventArgs e)
+        {
+            _311_calls.Map newMap = new _311_calls.Map();
+            this.NavigationService.Navigate(newMap);
+        }
 
     }
 }

@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Npgsql;
 using System.Data;
-using NpgsqlTypes;
+using System.Windows;
 
 namespace JsonUserVariable
 {
@@ -289,8 +289,9 @@ namespace JsonUserVariable
         /// <param name="offset"> the number that should be offset for moving through the dataset </param>
         /// <param name="limit"> </param>
         /// <returns></returns>
-        public List<Json311> FillList(String connString, int offset, int limit)
+        public List<Json311> GetFullDataset(int offset, int limit)
         {
+            String connString = (string)Application.Current.Resources["connString"];
             List<Json311> toDisplay = new List<Json311>();
             using (var conn = new NpgsqlConnection(connString))
             {
@@ -355,7 +356,39 @@ namespace JsonUserVariable
             }
             return toDisplay;
         }
+
+        /// <summary>
+        /// To-Do 
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <param name="filterField"></param>
+        /// <param name="filterSelection"></param>
+        /// <returns></returns>
+        public List<Json311> GetFilteredList(int limit, int offset, String filterField, String filterSelection)
+        {
+            String connString = (string)Application.Current.Resources["connString"];
+            using (var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                NpgsqlCommand query = new NpgsqlCommand("SELECT * FROM where " + filterField + 
+                    " IS " + filterSelection + " ORDER BY Created_date DESC LIMIT " + limit +
+                    " OFFSET " + offset, conn);
+            }
+                return new List<Json311>();
+        }
+
+        /// <summary>
+        /// To-Do
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <param name="date1"></param>
+        /// <param name="date2"></param>
+        /// <returns></returns>
+        public List<Json311> GetDateFilteredList(int limit, int offset, String date1, String date2)
+        {
+            return new List<Json311>();
+        }
     }
 }
-	
-

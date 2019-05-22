@@ -5,8 +5,6 @@ using SODA;
 using JsonUserVariable;
 using PgsqlDriver;
 using Npgsql;
-using NUnit.Framework;
-using System.Globalization;
 using System.Windows;
 
 
@@ -49,7 +47,6 @@ namespace ConsoleApp1
         {
             DateTime test = DateTime.Now;
             DateTime now = DateTime.Now;
-            SqlConnect dBConnect = new SqlConnect();
             String connString = (string)Application.Current.Resources["ConnString"];
             using (var conn = new NpgsqlConnection(connString))
             {
@@ -194,7 +191,6 @@ namespace ConsoleApp1
             /// Since the data is only updated every day for the day before in part and fully for
             /// 2 days before we get the dates for yesterday and the day before for filtering
             /// </remarks>
-            String day = (today.Day - 2).ToString();
             String yday = (today.Day - 3).ToString();
 
             /// <remarks>
@@ -203,7 +199,6 @@ namespace ConsoleApp1
             ///We format the data here to be in the correct type as the ToString method provided by
             ///the DateTime class does not allow for formatting in this manner
             /// </remarks>
-            String tdate = "\"" + year + "-" + month + "-" + day + "T00:00:00.000\"";
             String ydate = "\"" + year + "-" + month + "-" + yday + "T00:00:00.000\"";
 
             /// <remarks>
@@ -238,5 +233,4 @@ namespace ConsoleApp1
             return soql;
         }
     }
-
 }

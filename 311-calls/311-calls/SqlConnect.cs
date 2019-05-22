@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using Npgsql;
 using NpgsqlTypes;
 using JsonUserVariable;
-using System.Data;
+using System.Windows;
 
 namespace PgsqlDriver
 {
@@ -393,8 +392,9 @@ namespace PgsqlDriver
             }
         }
 
-        public int GetRows(String connString)
+        public int GetRows()
         {
+            String connString = (string)Application.Current.Resources["connString"];
             int total = 0;
             using(var conn = new NpgsqlConnection(connString))
             {
@@ -411,9 +411,5 @@ namespace PgsqlDriver
             }
             return total;
         }
-
-
     }
-        
-
 }

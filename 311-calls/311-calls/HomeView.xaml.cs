@@ -87,7 +87,6 @@ namespace Group7
         /// <param name="e"></param>
         private void Update_Click(object sender, RoutedEventArgs e)
         {
-            Credentials creds = new Credentials();
             ConsoleApp1.Group7 drive = new ConsoleApp1.Group7();
             drive.Execute();
         }

@@ -9,15 +9,19 @@
       Title="ViewData">
     <Grid Margin="0,0,0,0" Background="Snow" Name="OverallData">
         <Image HorizontalAlignment="Left" Height="100" Margin="0,0,0,0" VerticalAlignment="Top" Width="100" Source="Logo.jpg"/>
-        <Button Name="Previous" Content="Previous" ClickMode="Press" Click="Previous_click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Height="50" Width="100" Visibility="Visible" Panel.ZIndex="100" />
-        <Button Name="Next" Content="Next" ClickMode="Press" Click="Next_click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="200,0,0,0" Height="50" Width="100" Visibility="Visible" Panel.ZIndex="100"/>
-        <TextBox Text="Showing Rows:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,50,0,0" BorderThickness="0" Background="Snow" />
-        <TextBox Name="Rows_min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="183,50,0,0" BorderThickness="0" Background="Snow" />
-        <TextBox Text="Through" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,50,0,0" BorderThickness="0" Background="Snow"/>
-        <TextBox Name="Rows_max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,68,0,0" BorderThickness="0" Background="Snow"/>
-        <TextBox Text="Of" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="170,68,0,0" BorderThickness="0" Background="Snow" />
-        <TextBox Name ="Total" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="188,68,0,0" BorderThickness="0" Background="Snow"/>
+        <Button Name="Previous" Content="Previous" ClickMode="Press" Click="Previous_click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,0,0,0" Height="75" Width="100" Visibility="Visible" Panel.ZIndex="10" FontSize="20" />
+        <Button Name="Next" Content="Next" ClickMode="Press" Click="Next_click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="200,0,0,0" Height="75" Width="100" Visibility="Visible" Panel.ZIndex="10" FontSize="20"/>
+        <TextBox Text="Showing Rows:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,70,0,0" BorderThickness="0" Background="Snow" FontSize="20" />
+        <TextBox Name="Rows_min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="240,70,0,0" BorderThickness="0" Background="Snow" FontSize="20"/>
+        <TextBox Text="Through" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="310,70,0,0" BorderThickness="0" Background="Snow" FontSize="20"/>
+        <TextBox Name="Rows_max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="390,70,0,0" BorderThickness="0" Background="Snow" FontSize="20"/>
+        <TextBox Text="Of" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="460,70,0,0" BorderThickness="0" Background="Snow" FontSize="20" />
+        <TextBox Name ="Total" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="490,70,0,0" BorderThickness="0" Background="Snow" FontSize="20"/>
 
+        <Button Name="Show_map" Content="Map View" Click="Display_map" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,17,00" Height="100" Width="100" FontSize="20" BorderThickness="0"/> 
+
+        <!--<TextBox Text="Search By Date:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,0,0,0" Height="50" Background="Snow" BorderThickness="0" FontSize="20"/> -->
+        <!-- <DatePicker Margin="300,0,0,0" SelectedDateFormat="Long" DisplayDateStart="1/5/19" DisplayDateEnd="5/8/19" Height="100" Width="100" SelectedDateChanged="Startdate_changed" Panel.ZIndex="100"/> -->
         <ScrollViewer HorizontalScrollBarVisibility="Auto">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ListView Margin="0,100,0,0" Name="DBDataBinding">
