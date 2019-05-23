@@ -208,10 +208,11 @@ namespace RowManager
         }
 
         /// <summary>
-        /// 
+        /// If the user attempts to go back past the beginning of the set carries out
+        /// the result of prompting the user if they would like to jump to the very end
         /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// <param name="result">The result of the user prompt</param>
+        /// <returns>returns a bool telling the calling function to update or not</returns>
         public bool CarryOutDownFilter(MessageBoxResult result)
         {
             switch (result)

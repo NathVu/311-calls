@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Npgsql;
 using System.Data;
 using System.Windows;
+using NpgsqlTypes;
+using _311_calls;
 
 namespace JsonUserVariable
 {
@@ -358,37 +360,99 @@ namespace JsonUserVariable
         }
 
         /// <summary>
-        /// To-Do 
+        /// Gets the Data where the field selected matches the selected filter
+        /// Fields where search will be supported: 
+        ///     1) Zip
+        ///     2) Agency_name
+        ///     3) Borough
         /// </summary>
-        /// <param name="limit"></param>
-        /// <param name="offset"></param>
-        /// <param name="filterField"></param>
-        /// <param name="filterSelection"></param>
+        /// <param name="limit">the number of rows to get</param>
+        /// <param name="offset">the offset to move around the set</param>
+        /// <param name="filterField">the field selected</param>
+        /// <param name="filterSelection">the filter selected</param>
         /// <returns></returns>
         public List<Json311> GetFilteredList(int limit, int offset, String filterField, String filterSelection)
         {
             String connString = (string)Application.Current.Resources["connString"];
+            List<Json311> toDisplay = new List<Json311>();
             using (var conn = new NpgsqlConnection(connString))
             {
                 conn.Open();
-                NpgsqlCommand query = new NpgsqlCommand("SELECT * FROM where " + filterField + 
-                    " IS " + filterSelection + " ORDER BY Created_date DESC LIMIT " + limit +
-                    " OFFSET " + offset, conn);
+                NpgsqlCommand query = new NpgsqlCommand("SELECT Unique_key, Created_date, Closed_date" +
+                    " Agency_name, Complaint_type, Status, Incident_address, Incident_zip, Borough, FROM calls WHERE " + 
+                    filterField + " = '" + filterSelection + "' AND Created_date IS NOT NULL" +
+                    "ORDER BY Created_date DESC LIMIT " + limit + " OFFSET " + offset, conn);
+                query.Connection = conn;
+                NpgsqlDataAdapter myAdapter = new NpgsqlDataAdapter(query);
+                DataSet data = new DataSet();
+
+                myAdapter.Fill(data, "calls");
+                int total = data.Tables["calls"].Rows.Count;
+
+                int counter = 0;
+                while (total > counter)
+                {
+                    toDisplay.Add(new Json311()
+                    {
+                        Unique_key = data.Tables["calls"].Rows[counter]["Unique_key"].ToString(),
+                        Created_date = Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Created_date"]),
+                        Closed_date = Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Closed_date"]),
+                        Agency_name = data.Tables["calls"].Rows[counter]["Agency_name"].ToString(),
+                        Complaint_type = data.Tables["calls"].Rows[counter]["Complaint_type"].ToString(),
+                        Status = data.Tables["calls"].Rows[counter]["Status"].ToString(),
+                        Incident_address = data.Tables["calls"].Rows[counter]["Incident_address"].ToString(),
+                        Incident_zip = data.Tables["calls"].Rows[counter]["Incident_zip"].ToString(),
+                        Borough = data.Tables["calls"].Rows[counter]["Borough"].ToString(),
+                    });
+                }
             }
-                return new List<Json311>();
+                return toDisplay;
         }
 
         /// <summary>
-        /// To-Do
+        /// Gets the Filter if the user selects to see all data between 2 dates
         /// </summary>
-        /// <param name="limit"></param>
-        /// <param name="offset"></param>
-        /// <param name="date1"></param>
-        /// <param name="date2"></param>
+        /// <param name="limit">the number of rows to get</param>
+        /// <param name="offset">the offset to move around the set</param>
+        /// <param name="date1">the start date</param>
+        /// <param name="date2">the end date</param>
         /// <returns></returns>
-        public List<Json311> GetDateFilteredList(int limit, int offset, String date1, String date2)
+        public List<Json311> GetDateFilteredList(int limit, int offset, DateTime date1, DateTime date2)
         {
-            return new List<Json311>();
+            String connString = (string)Application.Current.Resources["connString"];
+            List<Json311> toDisplay = new List<Json311>();
+            NpgsqlDateTime start = date1, end = date2;
+            using(var conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                NpgsqlCommand query = new NpgsqlCommand("SELECT Unique_key, Created_date, Closed_date, Agency_name " +
+                    "Complaint_type, Status, Incident_address, Incident_zip, Borough FROM calls WHERE Created_date IS NOT NULL " +
+                    "AND Created_date >= start AND Created_date <= end LIMIT " + limit + " OFFSET " + offset);
+                query.Connection = conn;
+                NpgsqlDataAdapter myAdapter = new NpgsqlDataAdapter(query);
+                DataSet data = new DataSet();
+
+                myAdapter.Fill(data, "calls");
+                int total = data.Tables["calls"].Rows.Count;
+
+                int counter = 0;
+                while (total > counter)
+                {
+                    toDisplay.Add(new Json311()
+                    {
+                        Unique_key = data.Tables["calls"].Rows[counter]["Unique_key"].ToString(),
+                        Created_date = Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Created_date"]),
+                        Closed_date = Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Closed_date"]),
+                        Agency_name = data.Tables["calls"].Rows[counter]["Agency_name"].ToString(),
+                        Complaint_type = data.Tables["calls"].Rows[counter]["Complaint_type"].ToString(),
+                        Status = data.Tables["calls"].Rows[counter]["Status"].ToString(),
+                        Incident_address = data.Tables["calls"].Rows[counter]["Incident_address"].ToString(),
+                        Incident_zip = data.Tables["calls"].Rows[counter]["Incident_zip"].ToString(),
+                        Borough = data.Tables["calls"].Rows[counter]["Borough"].ToString(),
+                    });
+                }   
+            }
+                return toDisplay;
         }
     }
 }

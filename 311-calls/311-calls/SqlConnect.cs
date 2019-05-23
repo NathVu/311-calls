@@ -254,6 +254,7 @@ namespace PgsqlDriver
                             NpgsqlDateTime cdate = Convert.ToDateTime(entry.Closed_date);
                             writer.Write(cdate);
                         }
+
                         writer.Write(entry.Agency);
                         writer.Write(entry.Agency_name);
                         writer.Write(entry.Complaint_type);
@@ -392,6 +393,11 @@ namespace PgsqlDriver
             }
         }
 
+        /// <summary>
+        /// Gets the rows so we know the total number of rows so we can accurately move around
+        /// the dataset
+        /// </summary>
+        /// <returns>returns an int which is the number of rows in the dataset</returns>
         public int GetRows()
         {
             String connString = (string)Application.Current.Resources["connString"];
@@ -402,6 +408,59 @@ namespace PgsqlDriver
                 using(NpgsqlCommand totalRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE Created_date IS NOT NULL AND" +
                     " Closed_date IS NOT NULL AND Due_date IS NOT NULL AND Resolution_action_updated_date IS NOT NULL", conn))
                 using(NpgsqlDataReader reader = totalRows.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        total = reader.GetInt32(0);
+                    }
+                }
+            }
+            return total;
+        }
+
+        /// <summary>
+        /// Gets the total number of rows matching the query
+        /// </summary>
+        /// <param name="filterField">The field we are searching</param>
+        /// <param name="filterSelection">The value we want from the field</param>
+        /// <returns>Returns the number of rows in the set</returns>
+        public int GetRows(String filterField, String filterSelection)
+        {
+            String connString = (string)Application.Current.Resources["connString"];
+            int total = 0;
+            using(NpgsqlConnection conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                using (NpgsqlCommand filterRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE " + filterField + 
+                    " = '" + filterSelection + "' AND Created_date IS NOT NULL", conn))
+                using (NpgsqlDataReader reader = filterRows.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        total = reader.GetInt32(0);
+                    }
+                }
+            }
+            return total;
+        }
+
+        /// <summary>
+        /// Gets the number of rows that match the time period selected
+        /// </summary>
+        /// <param name="start">The Start Date</param>
+        /// <param name="end">The End Date</param>
+        /// <returns>returns the number of rows in the set</returns>
+        public int GetRows(DateTime date1, DateTime date2)
+        {
+            String connString = (string)Application.Current.Resources["connString"];
+            NpgsqlDateTime start = date1, end = date2;
+            int total = 0;
+            using (NpgsqlConnection conn = new NpgsqlConnection(connString))
+            {
+                conn.Open();
+                using (NpgsqlCommand filterRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE Created_date IS NOT NULL " +
+                    "AND Created_date <= " + end + " AND Created_date >= " + start, conn))
+                using (NpgsqlDataReader reader = filterRows.ExecuteReader())
                 {
                     while (reader.Read())
                     {

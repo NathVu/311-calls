@@ -16,6 +16,7 @@ using Npgsql;
 using JsonUserVariable;
 using PgsqlDriver;
 using RowManager;
+using _311_calls;
 
 namespace Group7
 {
@@ -36,7 +37,6 @@ namespace Group7
         {
             RowNumbers rows = (RowNumbers)Application.Current.Resources["RowNumbers"];
             List<Json311> data = this.GetData(rows);
-            OverallData.DataContext = rows;
             DBDataBinding.ItemsSource = data;
             Total.Text = rows.total.ToString();
             Rows_min.Text = rows.Curr_min.ToString();
@@ -99,9 +99,14 @@ namespace Group7
         }
 
 
+        /// <summary>
+        /// Displays the map page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Display_map(object sender, RoutedEventArgs e)
         {
-            _311_calls.Map newMap = new _311_calls.Map();
+            Map newMap = new Map();
             this.NavigationService.Navigate(newMap);
         }
 
