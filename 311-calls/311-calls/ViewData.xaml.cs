@@ -110,5 +110,49 @@ namespace Group7
             this.NavigationService.Navigate(newMap);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Display_dates(object sender, RoutedEventArgs e)
+        {
+            DateTime? start = Start.SelectedDate;
+            DateTime? end = Start.SelectedDate;
+            RowNumbers rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
+            SqlConnect dbconnect = new SqlConnect();
+            if (!start.HasValue)
+            {
+                MessageBox.Show("Select a date on the left");
+            }
+            else if(start.HasValue && !end.HasValue)
+            {
+                DateTime new_start = (DateTime)start;
+                int year = new_start.Year;
+                int month = new_start.Month;
+                int date = new_start.Day;
+                DateTime date1 = new DateTime(year, month, date, 0, 0, 0);
+                DateTime date2 = new DateTime(year, month, date, 23, 59, 59);
+                int num_rows = dbconnect.GetRows(date1, date2);
+                if(num_rows == 0)
+                {
+                    MessageBox.Show("There are no values for the selected dates");
+                }
+                else
+                {
+                    rows.filter_min = 0;
+                    if(num_rows > 500)
+                    {
+                        rows.filter_max = 500;
+                    }
+                    else
+                    {
+                        rows.filter_max = num_rows;
+                    }
+                    rows.filter_total = num_rows;
+                    Application.Current.Resources["RowNumbers"] = rows;
+                }
+            }
+        }
     }
 }

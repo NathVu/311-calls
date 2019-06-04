@@ -427,7 +427,7 @@ namespace JsonUserVariable
                 conn.Open();
                 NpgsqlCommand query = new NpgsqlCommand("SELECT Unique_key, Created_date, Closed_date, Agency_name " +
                     "Complaint_type, Status, Incident_address, Incident_zip, Borough FROM calls WHERE Created_date IS NOT NULL " +
-                    "AND Created_date >= start AND Created_date <= end LIMIT " + limit + " OFFSET " + offset);
+                    "AND Created_date >= " + start + " AND Created_date <= " + end + " LIMIT " + limit + " OFFSET " + offset);
                 query.Connection = conn;
                 NpgsqlDataAdapter myAdapter = new NpgsqlDataAdapter(query);
                 DataSet data = new DataSet();
