@@ -17,7 +17,11 @@
         <TextBox Name="Rows_max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="390,70,0,0" BorderThickness="0" Background="Snow" FontSize="20"/>
         <TextBox Text="Of:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="460,70,0,0" BorderThickness="0" Background="Snow" FontSize="20" />
         <TextBox Name ="Total" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="490,70,0,0" BorderThickness="0" Background="Snow" FontSize="20"/>
-
+        <TextBox Text="Filter Data Set" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,0,0,0" Background="Snow" FontSize="20" BorderThickness="0" />
+        <TextBox Text="By Date, Between" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Snow" Margin="300,30,0,0" FontSize="20" BorderThickness="0" />
+        <DatePicker Name="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,0,0,0" SelectedDateChanged="DatePicker_SelectedDateChanged" DisplayDateStart="01/05/19" DisplayDateEnd="05/04/19" FirstDayOfWeek="Monday"/>
+        <TextBox Text="and" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,30,0,0" FontSize="20" Background="Snow" BorderThickness="0" />
+        <DatePicker Name="End" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="510,30,0,0" SelectedDateChanged="DatePicker_SelectedDateChanged" DisplayDateStart="01/05/19" DisplayDateEnd="05/04/19" FirstDayOfWeek="Monday"/>
         <Button Name="Show_map" Content="Map View" Click="Display_map" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,17,00" Height="100" Width="100" FontSize="20" Panel.ZIndex="5"/> 
 
         <!--<TextBox Text="Search By Date:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,0,0,0" Height="50" Background="Snow" BorderThickness="0" FontSize="20"/> -->
