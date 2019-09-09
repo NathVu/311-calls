@@ -20,7 +20,7 @@ namespace PgsqlDriver
         /// </summary>  
         public String ConnectGCP(String user = "", String pass = "", bool newCredentials = true)
         {
-            if(newCredentials == true)
+            if (newCredentials == true)
             {
                 user = Authenticate(out pass);
             }
@@ -33,16 +33,18 @@ namespace PgsqlDriver
                 {
                     conn.Open();
                     this.CheckConnection(conn);
+                    //this.Validate(connString);
                     conn.Close();
                     return connString;
                 }
-            }    catch(Npgsql.PostgresException a) when (newCredentials == true)
-                 {
-                    this.ConnectGCP();
-                }
+            }
+            catch (Npgsql.PostgresException) when (newCredentials == true)
+            {
+                this.ConnectGCP();
+            }
 
             return "failed";
-            
+
         }
 
         /// <summary>
@@ -68,6 +70,7 @@ namespace PgsqlDriver
                 {
                     conn.Open();
                     this.CheckConnection(conn);
+                    //this.Validate(connString);
                     conn.Close();
                     return connString;
                 }
@@ -92,13 +95,13 @@ namespace PgsqlDriver
         /// <param name="conn">The connection we are testing</param>
         private void CheckConnection(NpgsqlConnection conn)
         {
-            if(conn.State == System.Data.ConnectionState.Open)
+            if (conn.State == System.Data.ConnectionState.Open)
             {
-               // Console.WriteLine("Connection Established");
+                // Console.WriteLine("Connection Established");
             }
             else
             {
-               // Console.WriteLine("Connection Dropped, Please re-enter credentials");
+                // Console.WriteLine("Connection Dropped, Please re-enter credentials");
                 this.ConnectGCP();
             }
         }
@@ -130,9 +133,9 @@ namespace PgsqlDriver
                 user = Console.ReadLine();
             }
             return user;
-            
+
         }
-        
+
         /// <summary>
         /// Get the Password for the User specified to connect to our postgresDB
         /// </summary>
@@ -215,22 +218,22 @@ namespace PgsqlDriver
                 {
                     foreach (Json311 entry in dataset)
                     {
-                      
+
                         /// <remarks> 
                         /// Check the retrieved dateTime against the entries dateTime
                         /// </remarks>
                         NpgsqlDateTime entryDate = Convert.ToDateTime(entry.Created_date);
                         if (entryDate < last_date)
                         {
-                            if(most_recent < entryDate)
+                            if (most_recent < entryDate)
                             {
                                 most_recent = entryDate;
                             }
                             oldC++;
                             continue;
-                       }
+                        }
 
-                         
+
                         writer.StartRow();
                         writer.Write(entry.Unique_key);
 
@@ -342,7 +345,7 @@ namespace PgsqlDriver
                 /// Update the stored Date in the checktime table, only update the time
                 /// if we are actually adding data and not just for a test
                 /// </remarks>
-                if(updateTime == true)
+                if (updateTime == true)
                 {
                     NpgsqlCommand dropCheck = new NpgsqlCommand("DROP TABLE checktime", conn);
                     dropCheck.ExecuteNonQuery();
@@ -355,7 +358,7 @@ namespace PgsqlDriver
                         writer.Complete();
                     }
                 }
-               
+
                 /// <remarks> 
                 /// Closes the connection when we are finished with it
                 /// </remarks>
@@ -402,12 +405,12 @@ namespace PgsqlDriver
         {
             String connString = (string)Application.Current.Resources["connString"];
             int total = 0;
-            using(var conn = new NpgsqlConnection(connString))
+            using (var conn = new NpgsqlConnection(connString))
             {
                 conn.Open();
-                using(NpgsqlCommand totalRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE Created_date IS NOT NULL AND" +
+                using (NpgsqlCommand totalRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE Created_date IS NOT NULL AND" +
                     " Closed_date IS NOT NULL AND Due_date IS NOT NULL AND Resolution_action_updated_date IS NOT NULL", conn))
-                using(NpgsqlDataReader reader = totalRows.ExecuteReader())
+                using (NpgsqlDataReader reader = totalRows.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -428,10 +431,10 @@ namespace PgsqlDriver
         {
             String connString = (string)Application.Current.Resources["connString"];
             int total = 0;
-            using(NpgsqlConnection conn = new NpgsqlConnection(connString))
+            using (NpgsqlConnection conn = new NpgsqlConnection(connString))
             {
                 conn.Open();
-                using (NpgsqlCommand filterRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE " + filterField + 
+                using (NpgsqlCommand filterRows = new NpgsqlCommand("SELECT COUNT(*) FROM calls WHERE " + filterField +
                     " = '" + filterSelection + "' AND Created_date IS NOT NULL", conn))
                 using (NpgsqlDataReader reader = filterRows.ExecuteReader())
                 {
@@ -469,6 +472,80 @@ namespace PgsqlDriver
                 }
             }
             return total;
+        }
+
+        /// <summary>
+        /// This is just to check the types, the actual table has already been created
+        /// This code will remain in case we need to create a new database
+        /// </summary>
+        /// <param name="connString">the connection string to connect to our DB</param>
+        public void Validate(String connString)
+        {
+            using (var conn = new NpgsqlConnection(connString))
+            {
+
+                /// <remarks>
+                /// Make Sure data is not duplicated
+                /// </remarks>
+                conn.Open();
+                NpgsqlCommand dropCheck = new NpgsqlCommand("DROP TABLE IF EXISTS checktime", conn);
+                dropCheck.ExecuteNonQuery();
+                NpgsqlCommand newCheck = new NpgsqlCommand("CREATE TABLE checktime (curr_up_date timestamp)", conn);
+                newCheck.ExecuteNonQuery();
+
+                NpgsqlCommand drop = new NpgsqlCommand("DROP TABLE IF EXISTS calls", conn);
+                drop.ExecuteNonQuery();
+                NpgsqlCommand checkTable = new NpgsqlCommand(
+                        "CREATE TABLE IF NOT EXISTS calls (" +
+                        "Unique_key varchar," +
+                        "Created_date timestamp," +
+                        "Closed_date timestamp," +
+                        "Agency varchar," +
+                        "Agency_name varchar, " +
+                        "Complaint_type varchar," +
+                        "Descriptor varchar," +
+                        "Location_type varchar," +
+                        "Incident_zip varchar," +
+                        "Incident_address varchar," +
+                        "Street_name varchar," +
+                        "Cross_street_1 varchar," +
+                        "Cross_street_2 varchar," +
+                        "Intersection_street_1 varchar," +
+                        "Intersection_street_2 varchar," +
+                        "Address_type varchar, " +
+                        "City varchar, " +
+                        "Landmark varchar," +
+                        "Facility_type varchar," +
+                        "Status varchar," +
+                        "Due_date timestamp," +
+                        "Resolution_description varchar," +
+                        "Resolution_action_updated_date timestamp," +
+                        "Community_board varchar," +
+                        "Bbl varchar, " +
+                        "Borough varchar, " +
+                        "x_coordinate_state_plane varchar, " +
+                        "y_coordinate_state_plane varchar," +
+                        "open_data_channel_type varchar," +
+                        "Park_facility_name varchar," +
+                        "Park_borough varchar," +
+                        "Vehicle_type varchar," +
+                        "Taxi_company_borough varchar," +
+                        "Taxi_pick_up_location varchar, " +
+                        "Bridge_highway_name varchar," +
+                        "Bridge_highway_direction varchar, " +
+                        "Road_ramp varchar," +
+                        "Bridge_highway_segment varchar," +
+                        "Latitude varchar, " +
+                        "Longitude varchar," +
+                        "Location_city varchar," +
+                        "Location point," +
+                        "Location_zip varchar, " +
+                        "Location_state varchar);", conn
+                    );
+                checkTable.ExecuteNonQuery();
+
+
+            }
         }
     }
 }

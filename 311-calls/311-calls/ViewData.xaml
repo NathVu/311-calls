@@ -20,9 +20,9 @@
         <TextBox Text="Filter Data Set" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,0,0,0" Background="Snow" FontSize="20" BorderThickness="0" />
         <TextBox Text="By Date, Between" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Snow" Margin="300,30,0,0" FontSize="20" BorderThickness="0" />
         <TextBox Text="Start Date: " HorizontalAlignment="Left" VerticalAlignment="Top" Background="Snow" FontSize="20" BorderThickness="0" Margin="465,0,0,0" />
-        <DatePicker Name="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="569,0,0,0" SelectedDateChanged="DatePicker_SelectedDateChanged" DisplayDateStart="01/05/19" DisplayDateEnd="05/04/19" FirstDayOfWeek="Monday"/>
+        <DatePicker Name="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="569,0,0,0" DisplayDateStart="01/05/19" DisplayDateEnd="05/04/19" FirstDayOfWeek="Monday"/>
         <TextBox Text="End Date:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,30,0,0" FontSize="20" Background="Snow" BorderThickness="0" />
-        <DatePicker Name="End" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="569,30,0,0" SelectedDateChanged="DatePicker_SelectedDateChanged" DisplayDateStart="01/05/19" DisplayDateEnd="05/04/19" FirstDayOfWeek="Monday"/>
+        <DatePicker Name="End" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="569,30,0,0" DisplayDateStart="01/05/19" DisplayDateEnd="05/04/19" FirstDayOfWeek="Monday"/>
         <Button Name="Run_dates" Content="Show Date Set" Click="Display_dates" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="670,0,0,0" Height="54" />
         <Button Name="Show_map" Content="Map View" Click="Display_map" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,17,00" Height="100" Width="100" FontSize="20" Panel.ZIndex="5"/> 
 

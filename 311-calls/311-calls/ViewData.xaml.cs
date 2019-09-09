@@ -29,11 +29,11 @@ namespace Group7
         public ViewData()
         {
             InitializeComponent();
-            SetDataConext();
+            SetDataContext();
 
         }
 
-        public void SetDataConext()
+        public void SetDataContext()
         {
             RowNumbers rows = (RowNumbers)Application.Current.Resources["RowNumbers"];
             List<Json311> data = this.GetData(rows);
@@ -73,7 +73,7 @@ namespace Group7
             bool update = rows.UpdateValuesDown();
             if(update == true)
             {
-                SetDataConext();
+                SetDataContext();
                 GC.Collect();
                 this.NavigationService.Refresh();
             }
@@ -91,7 +91,7 @@ namespace Group7
             bool update = rows.UpdateValuesUp();
             if(update == true)
             {
-                SetDataConext();
+                SetDataContext();
                 GC.Collect();
                 this.NavigationService.Refresh();
             }
@@ -121,6 +121,8 @@ namespace Group7
             DateTime? end = Start.SelectedDate;
             RowNumbers rows = Application.Current.Resources["RowNumbers"] as RowNumbers;
             SqlConnect dbconnect = new SqlConnect();
+            Json311 get_data = new Json311();
+            List<Json311> show_data = new List<Json311>();
             if (!start.HasValue)
             {
                 MessageBox.Show("Select a date on the left");
@@ -150,9 +152,15 @@ namespace Group7
                         rows.filter_max = num_rows;
                     }
                     rows.filter_total = num_rows;
-                    Application.Current.Resources["RowNumbers"] = rows;
+                    rows.is_filter = true;
+                    show_data =  get_data.GetDateFilteredList(0, 0, date1, date2);
+                    DBDataBinding.ItemsSource = show_data;
+                    this.NavigationService.Refresh();
                 }
             }
+            Application.Current.Resources["RowNumbers"] = rows;
         }
+
+        
     }
 }

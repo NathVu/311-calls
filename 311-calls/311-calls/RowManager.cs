@@ -20,6 +20,7 @@ namespace RowManager
         public int filter_max = 0;
         public int filter_total = 0;
         public int filter_remaining = 0;
+        public bool is_filter = false;
 
         public RowNumbers() { }
 

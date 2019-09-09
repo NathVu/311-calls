@@ -302,7 +302,7 @@ namespace JsonUserVariable
                 /// Helped by code from https://stackoverflow.com/questions/43084599/fill-a-listview-from-postgres-database-in-wpf-c-sharp
                 /// </remarks>
                 NpgsqlCommand query = new NpgsqlCommand("SELECT * FROM calls WHERE Created_date IS NOT NULL AND Closed_date IS NOT NULL " +
-                    "AND Due_date IS NOT NULL AND Resolution_action_updated_date IS NOT NULL ORDER BY Created_date DESC LIMIT " + limit + " OFFSET " + offset, conn);
+                    /*AND Due_date IS NOT NULL AND Resolution_action_updated_date IS NOT NULL*/ "ORDER BY Created_date DESC LIMIT " + limit + " OFFSET " + offset, conn);
                 query.Connection = conn;
                 NpgsqlDataAdapter myAdapter = new NpgsqlDataAdapter(query);
 
@@ -316,8 +316,8 @@ namespace JsonUserVariable
                     toDisplay.Add(new Json311()
                     {
                         Unique_key = data.Tables["calls"].Rows[counter]["Unique_key"].ToString(),
-                        Created_date =  Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Created_date"]),
-                        Closed_date = Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Closed_date"]),
+                        Created_date =  this.nullableConverter(data.Tables["calls"].Rows[counter]["Created_date"]),
+                        Closed_date = this.nullableConverter(data.Tables["calls"].Rows[counter]["Closed_date"]),
                         Agency_name = data.Tables["calls"].Rows[counter]["Agency_name"].ToString(),
                         Complaint_type = data.Tables["calls"].Rows[counter]["Complaint_type"].ToString(),
                         Descriptor = data.Tables["calls"].Rows[counter]["Descriptor"].ToString(),
@@ -334,9 +334,9 @@ namespace JsonUserVariable
                         Landmark = data.Tables["calls"].Rows[counter]["Landmark"].ToString(),
                         Facility_type = data.Tables["calls"].Rows[counter]["Facility_type"].ToString(),
                         Status = data.Tables["calls"].Rows[counter]["Status"].ToString(),
-                        Due_date = Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Due_date"]),
+                        Due_date = this.nullableConverter(data.Tables["calls"].Rows[counter]["Due_date"]),
                         Resolution_description = data.Tables["calls"].Rows[counter]["Resolution_description"].ToString(),
-                        Resolution_action_updated_date = Convert.ToDateTime(data.Tables["calls"].Rows[counter]["Resolution_action_updated_date"]),
+                        Resolution_action_updated_date = this.nullableConverter(data.Tables["calls"].Rows[counter]["Resolution_action_updated_date"]),
                         Community_board = data.Tables["calls"].Rows[counter]["Community_board"].ToString(),
                         Borough = data.Tables["calls"].Rows[counter]["Borough"].ToString(),
                         Park_facility_name = data.Tables["calls"].Rows[counter]["Park_facility_name"].ToString(),
@@ -453,6 +453,18 @@ namespace JsonUserVariable
                 }   
             }
                 return toDisplay;
+        }
+
+        private DateTime? nullableConverter (object timestamp)
+        {
+            try
+            {
+                return Convert.ToDateTime(timestamp);
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
     }
 }
